@@ -1,0 +1,20 @@
+{
+  "name": "baozi",
+  "version": "1.0.0",
+  "scripts": {
+    "init": "npm install",
+    "postinstall": "jspm install",
+    "start": "browser-sync start --server"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.14.0",
+    "jspm": "^0.16.42"
+  },
+  "jspm": {
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  }
+}
