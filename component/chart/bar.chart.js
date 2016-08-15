@@ -1,43 +1,116 @@
-export class BarChart extends HTMLElement{
+export class BarChart extends HTMLElement {
     constructor() {
         super();
-        
-        this.data = [1, 3, 2, 7, 4];
     }
-    
-    createdCallback(){
+
+    createdCallback() {
+    }
+
+    attachedCallback() {
+        let chartType = this.dataset['type'];
+        chartType = chartType || 'row';
+
+        let scaleAxisMarginRatioA = 0.1;
+        let scaleAxisMarginRatioB = 0.2;
+        let labelAxisMarginRatioA = 0.1;
+        let labelAxisMarginRatioB = 0.2;
+
+        this.data = JSON.parse(this.dataset['data']);
+        let parent = this.parentElement;
+
+        let totalScaleLength;
+        let totalLabelLength;
+
+        let axisP_A;
+        let axisP_B;
+        let scaleName;
+        let labelName;
+
+        if (chartType === 'row') {
+            totalScaleLength = parent.clientWidth;
+            totalLabelLength = parent.clientHeight;
+            axisP_A = 'x';
+            axisP_B = 'y';
+            scaleName = 'width';
+            labelName = 'height';
+
+        } else if (chartType === 'bar') {
+            totalScaleLength = parent.clientHeight;
+            totalLabelLength = parent.clientWidth;
+            axisP_A = 'y';
+            axisP_B = 'x';
+            scaleName = 'height';
+            labelName = 'width';
+        }
+
+        let valueSpan = totalScaleLength * (1 - scaleAxisMarginRatioA - scaleAxisMarginRatioB);
+        let labelLength = totalLabelLength * (1 - labelAxisMarginRatioA - labelAxisMarginRatioB) / this.data.length;
+        let maxMinObject = this.getSpanUnitBase();
+        let valueSpanUnitBase = maxMinObject.max - maxMinObject.min;
+
+        let labelAxisStart;
+        let scaleAxisStart;
+        if (chartType === 'row') {
+            labelAxisStart = totalScaleLength * scaleAxisMarginRatioA;
+            scaleAxisStart = totalLabelLength * (1 - labelAxisMarginRatioB);
+        } else if (chartType === 'bar') {
+            labelAxisStart = totalScaleLength * (1 - scaleAxisMarginRatioB);
+            scaleAxisStart = totalLabelLength * scaleAxisMarginRatioA
+        }
+        if (maxMinObject.min < 0) {
+            if (chartType === 'row') {
+                labelAxisStart = labelAxisStart - valueSpan * maxMinObject.min / valueSpanUnitBase;
+            } else if (chartType === 'bar') {
+                labelAxisStart = labelAxisStart + valueSpan * maxMinObject.min / valueSpanUnitBase;
+            }
+        }
+
+        let labelAxis = `<line ${axisP_A}1="${labelAxisStart}" ${axisP_B}1="${totalLabelLength * labelAxisMarginRatioA}" ${axisP_A}2="${labelAxisStart}" ${axisP_B}2="${totalLabelLength * (1 - labelAxisMarginRatioB)}" style="stroke:black;stroke-width:1" />`;
+        let scaleAxis = `<line ${axisP_A}1="${totalScaleLength * scaleAxisMarginRatioA}" ${axisP_B}1="${scaleAxisStart}" ${axisP_A}2="${totalScaleLength * (1 - scaleAxisMarginRatioB)}" ${axisP_B}2="${scaleAxisStart}" style="stroke:black;stroke-width:1" />`;
+
+        let bars = [];
+
+        for (let i = 0; i < this.data.length; i++) {
+            let start = labelAxisStart;
+            let barValue = Math.abs(valueSpan * this.data[i] / valueSpanUnitBase);
+
+            if (chartType === 'row') {
+                if (this.data[i] < 0) {
+                    start = start - barValue;
+                }
+            } else if (chartType === 'bar') {
+                if (this.data[i] > 0) {
+                    start = start - barValue;
+                }
+            }
+
+            let bar = `<rect ${axisP_A}="${start}" ${axisP_B}="${totalLabelLength * labelAxisMarginRatioA + labelLength * 0.2 + labelLength * i}" ${scaleName}="${barValue}" ${labelName}="${labelLength * 0.6}" style="fill:lightgrey;stroke-width:1;stroke:lightgrey" />`;
+            bars[i] = bar;
+        }
+
         this.innerHTML = `
-        
-<svg height="400" width="400">
-<rect x="100" y="100" width="200" height="20" style="fill:lightgrey;stroke-width:1;stroke:lightgrey" />
-<text x="40" y="115" fill="grey">Fish</text>
-
-<rect x="100" y="130" width="150" height="20" style="fill:lightgrey;stroke-width:1;stroke:lightgrey" />
-<text x="40" y="145" fill="grey">Beef</text>
-
-<rect x="100" y="160" width="180" height="20" style="fill:lightgrey;stroke-width:1;stroke:lightgrey" />
-<text x="40" y="175" fill="grey">Pork</text>
-
-
-<line x1="100" y1="190" x2="100" y2="80" style="stroke:black;stroke-width:1" />
-<line x1="100" y1="190" x2="390" y2="190" style="stroke:black;stroke-width:1" />
-
-<line x1="150" y1="185" x2="150" y2="190" style="stroke:black;stroke-width:1" />
-<text x="140" y="205" fill="grey">50</text>
-<line x1="200" y1="185" x2="200" y2="190" style="stroke:black;stroke-width:1" />
-<text x="190" y="205" fill="grey">100</text>
-<line x1="250" y1="185" x2="250" y2="190" style="stroke:black;stroke-width:1" />
-<text x="240" y="205" fill="grey">150</text>
-<line x1="300" y1="185" x2="300" y2="190" style="stroke:black;stroke-width:1" />
-<text x="290" y="205" fill="grey">200</text>
-<line x1="350" y1="185" x2="350" y2="190" style="stroke:black;stroke-width:1" />
-<text x="340" y="205" fill="grey">250</text>
-</svg>
-
+        <svg ${labelName}="${totalLabelLength}" ${scaleName}="${totalScaleLength}">
+        ${bars}
+        ${labelAxis}
+        ${scaleAxis}
+        </svg>
         `;
     }
 
-    attachedCallback(){
-        
+    getSpanUnitBase() {
+        let min = 0;
+        let max = 0;
+
+        for (let i = 0; i < this.data.length; i++) {
+            if (this.data[i] < min) {
+                min = this.data[i];
+            }
+
+            if (this.data[i] > max) {
+                max = this.data[i];
+            }
+        }
+
+        return { max: max, min: min };
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Baozi</title>
     <script src="jspm_packages/system.js"></script>
@@ -8,7 +9,108 @@
         System.import("index.js");
     </script>
 </head>
+
 <body>
-    <bar-chart></bar-chart>
+    <!--<div style="width: 600px; height: 600px">
+        <svg viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+
+            <g transform="translate(0)">
+                <rect x="2" y="2" width="200" height="20" style="fill:lightgrey;stroke-width:1;stroke:lightgrey">
+                    <animate attributeType="XML" attributeName="width" from="0" to="200" dur="1s" repeatCount="1" />
+                </rect>
+
+                <rect x="100" y="130" width="150" height="20" style="fill:lightgrey;stroke-width:1;stroke:lightgrey">
+                    <animate attributeType="XML" attributeName="width" from="0" to="150" dur="1s" repeatCount="1" />
+                </rect>
+            </g>
+
+            <g transform="translate(0 200) rotate(30)">
+                <rect x="100" y="100" width="200" height="20" style="fill:lightgrey;stroke-width:1;stroke:lightgrey">
+                    <animate attributeType="XML" attributeName="width" from="0" to="200" dur="1s" repeatCount="1" />
+                </rect>
+
+                <rect x="100" y="130" width="150" height="20" style="fill:lightgrey;stroke-width:1;stroke:lightgrey">
+                    <animate attributeType="XML" attributeName="width" from="0" to="150" dur="1s" repeatCount="1" />
+                </rect>
+            </g>
+
+        </svg>
+    </div>
+-->
+<div style="width: 600px;height:300px">
+    <bar-chart data-data="[1, -3, 5, 7, -4]" data-type="bar"></bar-chart>
+</div>
+
+<div style="width: 600px;height:300px">
+    <bar-chart data-data="[1, -3, 5, 7, -4]" data-type="row"></bar-chart>
+</div>
+
+<div style="width: 300px;height:600px">
+    <barv-chart data-data="[1, 3, -5, 7, -4]"></barv-chart>
+</div>
+   <!-- <div style="width:500px;height:500px">
+        <svg viewBox="0 0 1000 1000">
+            <g>
+                <rect x="300" y="400" width="400" height="80" style="fill:lightgrey;stroke-width:1;stroke:lightgrey" />
+                <rect x="300" y="500" width="300" height="80" style="fill:lightgrey;stroke-width:1;stroke:lightgrey" />
+                <rect x="300" y="600" width="150" height="80" style="fill:lightgrey;stroke-width:1;stroke:lightgrey" />
+            </g>
+
+            <g fill="grey" style="font-size:30">
+                <text x="180" y="450">Beef</text>
+                <text x="180" y="550">Fish</text>
+                <text x="180" y="650">Pork</text>
+            </g>
+
+            <line x1="300" y1="300" x2="300" y2="700" style="stroke:black;stroke-width:1" />
+            <line x1="300" y1="700" x2="700" y2="700" style="stroke:black;stroke-width:1" />
+
+
+            <line x1="400" y1="690" x2="400" y2="700" style="stroke:black;stroke-width:1" />
+            <line x1="500" y1="690" x2="500" y2="700" style="stroke:black;stroke-width:1" />
+            <line x1="600" y1="690" x2="600" y2="700" style="stroke:black;stroke-width:1" />
+            <line x1="700" y1="690" x2="700" y2="700" style="stroke:black;stroke-width:1" />
+
+            <g fill="grey" style="font-size:30">
+                <text x="380" y="730">100</text>
+                <text x="480" y="730">200</text>
+                <text x="580" y="730">300</text>
+                <text x="680" y="730">400</text>
+            </g>
+        </svg>
+    </div>
+
+    <div >
+        <svg viewBox="0 0 1000 500">
+            <g>
+                <rect x="300" y="200" width="400" height="40" style="fill:lightgrey;stroke-width:1;stroke:lightgrey" />
+                <rect x="300" y="250" width="300" height="40" style="fill:lightgrey;stroke-width:1;stroke:lightgrey" />
+                <rect x="300" y="300" width="150" height="40" style="fill:lightgrey;stroke-width:1;stroke:lightgrey" />
+            </g>
+
+            <g fill="grey" style="font-size:30">
+                <text x="180" y="225">Beef</text>
+                <text x="180" y="275">Fish</text>
+                <text x="180" y="325">Pork</text>
+            </g>
+
+            <line x1="300" y1="150" x2="300" y2="350" style="stroke:black;stroke-width:1" />
+            <line x1="300" y1="350" x2="700" y2="350" style="stroke:black;stroke-width:1" />
+
+
+            <line x1="400" y1="345" x2="400" y2="350" style="stroke:black;stroke-width:1" />
+            <line x1="500" y1="345" x2="500" y2="350" style="stroke:black;stroke-width:1" />
+            <line x1="600" y1="345" x2="600" y2="350" style="stroke:black;stroke-width:1" />
+            <line x1="700" y1="345" x2="700" y2="350" style="stroke:black;stroke-width:1" />
+
+            <g fill="grey" style="font-size:30" transform="translate(0)">
+                <text x="380" y="375" transform="rotate(0)">100</text>
+                <text x="480" y="375">200</text>
+                <text x="580" y="375">300</text>
+                <text x="680" y="375">400</text>
+            </g>
+        </svg>
+    </div>-->
 </body>
+
 </html>
