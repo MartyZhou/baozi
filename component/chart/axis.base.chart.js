@@ -1,11 +1,9 @@
-import {AxisBaseChart} from './axis.base.chart';
-
-export class BarChart extends AxisBaseChart {
+export class AxisBaseChart extends HTMLElement {
     constructor() {
         super();
     }
 
-    /* createdCallback() {
+    createdCallback() {
     }
 
     attachedCallback() {
@@ -19,14 +17,28 @@ export class BarChart extends AxisBaseChart {
         this.structureValues = {};
         
         this.chartConfig.chartType = this.dataset['type'];
-        this.data = JSON.parse(this.dataset['data']);
+        this.chartConfig.field = this.dataset['field'];
+        this.chartConfig.label = this.dataset['label'];
+        
+        this.rawData = JSON.parse(this.dataset['data']);
+        
+        if(typeof this.rawData[0] === 'number'){
+            this.data = this.rawData;
+        }else{
+            this.data = [];
+            this.labelNames = [];
+            for(let i = 0; i < this.rawData.length; i ++){
+                this.data.push(this.rawData[i][this.chartConfig.field]);
+                this.labelNames.push(this.rawData[i][this.chartConfig.label]);
+            }
+        }
         
         this.chartConfig.chartType = this.chartConfig.chartType || 'row';
 
-        this.axisConfig.scaleAxisMarginRatioA = 0.15;
-        this.axisConfig.scaleAxisMarginRatioB = 0.25;
-        this.axisConfig.labelAxisMarginRatioA = 0.35;
-        this.axisConfig.labelAxisMarginRatioB = 0.25;
+        this.axisConfig.scaleAxisMarginRatioA = 0.05;
+        this.axisConfig.scaleAxisMarginRatioB = 0.05;
+        this.axisConfig.labelAxisMarginRatioA = 0.05;
+        this.axisConfig.labelAxisMarginRatioB = 0.05;
     }
 
     getSpanUnitBase() {
@@ -109,32 +121,38 @@ export class BarChart extends AxisBaseChart {
             labelAxis: labelAxis,
             scaleAxis: scaleAxis
         };
-    }*/
+    }
     
     createChartItems(){
+    }
+    
+    createLabels(){
         let items = [];
 
-        for (let i = 0; i < this.data.length; i++) {
+        for (let i = 0; i < this.labelNames.length; i++) {
             let start = this.structureValues.labelAxisStart;
-            let itemValue = Math.abs(this.structureValues.valueSpan * this.data[i] / this.structureValues.valueSpanUnitBase);
-
+            
             if (this.chartConfig.chartType === 'row') {
-                if (this.data[i] < 0) {
-                    start = start - itemValue;
+                if(this.data[i] < 0){
+                    start = start + 2;
+                }else{
+                    start = start - 80;
                 }
             } else if (this.chartConfig.chartType === 'bar') {
-                if (this.data[i] > 0) {
-                    start = start - itemValue;
+                if(this.data[i] < 0){
+                    start = start - 2;
+                }else{
+                    start = start + 20;
                 }
             }
 
             let item = `
-            <rect 
+            <text 
             ${this.structureValues.axisP_A}="${start}" 
-            ${this.structureValues.axisP_B}="${this.structureValues.totalLabelLength * this.axisConfig.labelAxisMarginRatioA + this.structureValues.labelLength * 0.2 + this.structureValues.labelLength * i}" 
-            ${this.structureValues.scaleName}="${itemValue}" 
-            ${this.structureValues.labelName}="${this.structureValues.labelLength * 0.6}" 
-            style="fill:lightgrey;stroke-width:1;stroke:lightgrey" />
+            ${this.structureValues.axisP_B}="${this.structureValues.totalLabelLength * this.axisConfig.labelAxisMarginRatioA + this.structureValues.labelLength * 0.3 + this.structureValues.labelLength * i}" 
+            style="fill:blue">
+            ${this.labelNames[i]}
+            </text>
             `;
             
             items[i] = item;
@@ -143,11 +161,11 @@ export class BarChart extends AxisBaseChart {
         return items;
     }
     
-    /*
     createChart(){
         this.calculateStructureValue();
         let axises = this.createAxis();
         let items = this.createChartItems();
+        let labels = this.createLabels();
         let chart = `
         <svg 
         ${this.structureValues.labelName}="${this.structureValues.totalLabelLength}" 
@@ -155,9 +173,10 @@ export class BarChart extends AxisBaseChart {
         ${items}
         ${axises.labelAxis}
         ${axises.scaleAxis}
+        ${labels}
         </svg>
         `;
         
         return chart;
-    }*/
+    }
 }
